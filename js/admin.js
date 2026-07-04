@@ -109,6 +109,45 @@ async function initDashboard() {
   });
 
   document.querySelectorAll(".image-field").forEach(initImageField);
+
+  document.getElementById("addEpisodeBtn").addEventListener("click", () => {
+    document.getElementById("episodeListEditor").insertAdjacentHTML("beforeend", episodeRowHtml());
+    bindEpisodeRemoveButtons();
+  });
+}
+
+/* ---------- Episode rows (Trailer / Eps 01 / Eps 02 / ...) ---------- */
+function episodeRowHtml(ep = {}) {
+  return `
+    <div class="episode-row" data-id="${ep.id || ""}">
+      <input type="text" class="episode-label" placeholder="Label (mis. Trailer, Eps 01)" value="${escapeHtml(ep.label || "")}" />
+      <input type="text" class="episode-url" placeholder="https://drive.google.com/file/d/xxxxx/view" value="${escapeHtml(ep.videoUrl || "")}" />
+      <button type="button" class="icon-btn danger episode-remove-btn" aria-label="Hapus episode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      </button>
+    </div>
+  `;
+}
+
+function bindEpisodeRemoveButtons() {
+  document.querySelectorAll(".episode-remove-btn").forEach((btn) => {
+    btn.onclick = () => btn.closest(".episode-row").remove();
+  });
+}
+
+function renderEpisodeRows(episodes) {
+  const wrap = document.getElementById("episodeListEditor");
+  wrap.innerHTML = episodes.map(episodeRowHtml).join("");
+  bindEpisodeRemoveButtons();
+}
+
+// Data lama cuma punya `videoUrl` tunggal (belum ada `episodes`) -
+// perlakukan sebagai satu episode "Trailer" biar tetap tampil di editor.
+function getEpisodesForEdit(movie) {
+  if (!movie) return [];
+  if (Array.isArray(movie.episodes) && movie.episodes.length) return movie.episodes;
+  if (movie.videoUrl) return [{ id: "legacy", label: "Trailer", videoUrl: movie.videoUrl }];
+  return [];
 }
 
 /* ---------- Image field (Link URL / Upload Gambar toggle) ---------- */
@@ -234,6 +273,13 @@ async function handleHeroSave(e) {
   btn.textContent = "Simpan Banner";
 }
 
+function episodeBadge(movie) {
+  const count = Array.isArray(movie.episodes) ? movie.episodes.length : 0;
+  if (count > 0) return `🎬 ${count} eps`;
+  if (movie.videoUrl) return "🎬"; // data lama belum dimigrasi
+  return "";
+}
+
 /* ---------- Movie table ---------- */
 function renderMovieTable() {
   const movies = workingData.movies || [];
@@ -249,7 +295,7 @@ function renderMovieTable() {
       (m) => `
     <tr data-id="${m.id}">
       <td><div class="table-thumb"><img src="${m.poster}" alt="${escapeHtml(m.title)}" /></div></td>
-      <td>${escapeHtml(m.title)} ${m.videoUrl ? "🎬" : ""}</td>
+      <td>${escapeHtml(m.title)} ${episodeBadge(m)}</td>
       <td>${escapeHtml(m.author)}</td>
       <td>${m.rating ?? "-"}</td>
       <td>
@@ -309,7 +355,7 @@ function openMovieModal(movie = null) {
   document.getElementById("movieRating").value = movie ? movie.rating ?? "" : "";
   document.getElementById("moviePoster").value = movie ? movie.poster : "";
   document.getElementById("movieDescription").value = movie ? movie.description : "";
-  document.getElementById("movieVideoUrl").value = movie ? movie.videoUrl || "" : "";
+  renderEpisodeRows(getEpisodesForEdit(movie));
 
   if (imageFieldControllers.moviePoster) imageFieldControllers.moviePoster.reset();
 
@@ -327,15 +373,28 @@ async function handleMovieSave(e) {
   submitBtn.textContent = "Menyimpan...";
 
   const id = document.getElementById("movieId").value;
-  const videoInput = document.getElementById("movieVideoUrl").value.trim();
 
-  if (videoInput && !extractDriveFileId(videoInput)) {
-    alert(
-      "Link Google Drive tidak dikenali. Pastikan formatnya seperti https://drive.google.com/file/d/FILE_ID/view"
-    );
-    submitBtn.disabled = false;
-    submitBtn.textContent = id ? "Simpan Perubahan" : "Simpan Film";
-    return;
+  const episodeRows = Array.from(document.querySelectorAll("#episodeListEditor .episode-row"));
+  const episodes = [];
+  for (const row of episodeRows) {
+    const label = row.querySelector(".episode-label").value.trim();
+    const url = row.querySelector(".episode-url").value.trim();
+    if (!label && !url) continue; // baris kosong, lewati saja
+
+    if (!url || !extractDriveFileId(url)) {
+      alert(
+        `Link Google Drive untuk episode "${label || "(tanpa label)"}" tidak dikenali. Pastikan formatnya seperti https://drive.google.com/file/d/FILE_ID/view`
+      );
+      submitBtn.disabled = false;
+      submitBtn.textContent = id ? "Simpan Perubahan" : "Simpan Film";
+      return;
+    }
+
+    episodes.push({
+      id: row.dataset.id && row.dataset.id !== "legacy" ? row.dataset.id : "ep" + Date.now() + episodes.length,
+      label: label || `Episode ${episodes.length + 1}`,
+      videoUrl: url,
+    });
   }
 
   const payload = {
@@ -346,12 +405,14 @@ async function handleMovieSave(e) {
       : null,
     poster: document.getElementById("moviePoster").value.trim(),
     description: document.getElementById("movieDescription").value.trim(),
-    videoUrl: videoInput,
+    episodes,
   };
 
   if (id) {
     const idx = workingData.movies.findIndex((m) => m.id === id);
-    workingData.movies[idx] = { ...workingData.movies[idx], ...payload };
+    const merged = { ...workingData.movies[idx], ...payload };
+    delete merged.videoUrl; // field lama sudah digantikan oleh `episodes`
+    workingData.movies[idx] = merged;
   } else {
     payload.id = "m" + Date.now();
     workingData.movies.unshift(payload);
