@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — Tunton Luk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="admin-body">
+
+  <!-- ===================== LOGIN VIEW ===================== -->
+  <div class="admin-login-wrap" id="loginView">
+    <div class="admin-login-card">
+      <span class="logo">Tunton<span class="accent">Luk</span></span>
+      <p class="subtitle">Masuk ke panel admin untuk mengelola film</p>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="username">Username</label>
+          <input type="text" id="username" autocomplete="username" required />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" autocomplete="current-password" required />
+        </div>
+        <div class="field-error" id="loginError"></div>
+        <button type="submit" class="btn-primary">Masuk</button>
+      </form>
+
+      <div class="credential-hint">
+        Demo credential — Username: <strong>admin</strong> · Password: <strong>admin123</strong>
+      </div>
+
+      <div style="text-align:center; margin-top:18px;">
+        <a href="index.html" style="font-size:13px; color:var(--text-secondary);">&larr; Kembali ke Beranda</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== DASHBOARD VIEW ===================== -->
+  <div id="dashboardView" style="display:none;">
+    <header class="admin-header site-header">
+      <div class="container header-inner">
+        <a href="index.html" class="logo">Tunton<span class="accent">Luk</span></a>
+        <div class="admin-header-right">
+          <span style="font-size:13px; color:var(--text-secondary);">Panel Admin</span>
+          <button class="btn-secondary" id="logoutBtn">Keluar</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-main container">
+
+      <!-- Hero editor -->
+      <section class="panel">
+        <h2 class="panel-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15l5-5 4 4 5-6 4 4"/></svg>
+          Banner Hero (Beranda)
+        </h2>
+        <div class="hero-editor-grid">
+          <form id="heroForm">
+            <div class="field">
+              <label for="heroTitleInput">Judul Film</label>
+              <input type="text" id="heroTitleInput" required />
+            </div>
+            <div class="field">
+              <label for="heroDescInput">Deskripsi Singkat</label>
+              <textarea id="heroDescInput" required></textarea>
+            </div>
+            <div class="field">
+              <label for="heroImageInput">URL Gambar Banner</label>
+              <input type="url" id="heroImageInput" required />
+              <div class="field-hint">Gunakan URL gambar landscape, contoh: https://picsum.photos/1600/700</div>
+            </div>
+            <div class="field">
+              <label for="heroCtaInput">Label Tombol</label>
+              <input type="text" id="heroCtaInput" required />
+            </div>
+            <button type="submit" class="btn-primary">Simpan Banner</button>
+          </form>
+
+          <div>
+            <label style="display:block; font-size:13px; color:var(--text-secondary); margin-bottom:6px; font-weight:500;">Preview</label>
+            <div class="hero-preview" id="heroPreview">
+              <img id="heroPreviewImg" src="" alt="Preview banner" />
+              <div class="hero-preview-overlay"><span id="heroPreviewTitle"></span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Movie list -->
+      <section class="panel">
+        <div class="admin-section-head">
+          <h2 style="font-family:var(--font-display); font-size:19px; margin:0;">Daftar Film</h2>
+          <button class="btn-primary" id="addMovieBtn" style="width:auto; display:flex; align-items:center; gap:8px; padding:11px 18px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tambah Film
+          </button>
+        </div>
+
+        <div class="movie-table-wrap">
+          <table class="movie-table">
+            <thead>
+              <tr>
+                <th>Poster</th>
+                <th>Judul</th>
+                <th>Sutradara / Author</th>
+                <th>Rating</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="movieTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===================== MOVIE MODAL (Add / Edit) ===================== -->
+  <div class="modal-overlay" id="movieModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="modalTitle">Tambah Film</h3>
+        <button class="icon-btn" id="modalCloseBtn" aria-label="Tutup">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="movieForm">
+        <input type="hidden" id="movieId" />
+        <div class="field">
+          <label for="movieTitle">Judul Film</label>
+          <input type="text" id="movieTitle" required />
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <label for="movieAuthor">Author / Sutradara</label>
+            <input type="text" id="movieAuthor" required />
+          </div>
+          <div class="field">
+            <label for="movieRating">Rating (0–10)</label>
+            <input type="number" id="movieRating" min="0" max="10" step="0.1" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="moviePoster">URL Poster</label>
+          <input type="url" id="moviePoster" required />
+          <div class="field-hint">Gunakan gambar potrait, contoh: https://picsum.photos/500/700</div>
+        </div>
+        <div class="field">
+          <label for="movieDescription">Deskripsi</label>
+          <textarea id="movieDescription" required></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="modalCancelBtn">Batal</button>
+          <button type="submit" class="btn-primary" id="modalSubmitBtn">Simpan Film</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
