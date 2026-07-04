@@ -188,9 +188,10 @@
           <textarea id="movieDescription" required></textarea>
         </div>
         <div class="field">
-          <label for="movieVideoUrl">Link Video Google Drive (opsional)</label>
-          <input type="text" id="movieVideoUrl" placeholder="https://drive.google.com/file/d/xxxxx/view" />
-          <div class="field-hint">Pastikan sharing sudah diset ke "Anyone with the link". Kosongkan jika belum ada video.</div>
+          <label>Episode</label>
+          <div id="episodeListEditor" class="episode-list-editor"></div>
+          <button type="button" class="btn-secondary" id="addEpisodeBtn" style="width:auto; padding:8px 14px; font-size:13px; margin-top:4px;">+ Tambah Episode</button>
+          <div class="field-hint">Contoh label: Trailer, Eps 01, Eps 02. Link harus Google Drive dengan sharing "Anyone with the link". Episode paling atas akan diputar otomatis saat film dibuka. Kosongkan semua jika belum ada video.</div>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn-secondary" id="modalCancelBtn">Batal</button>
