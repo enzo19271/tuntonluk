@@ -60,6 +60,32 @@ const Store = {
     return res.json();
   },
 
+  async uploadImage(file, folder = "uploads") {
+    const secret = this.getAdminSecret();
+
+    const contentBase64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(",")[1]);
+      reader.onerror = () => reject(new Error("Gagal membaca file gambar."));
+      reader.readAsDataURL(file);
+    });
+
+    const res = await fetch("/api/upload-image", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Admin-Secret": secret || "",
+      },
+      body: JSON.stringify({ filename: file.name, contentBase64, folder }),
+    });
+
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(body.error || "Gagal upload gambar.");
+    }
+    return body.url;
+  },
+
   async login(username, password) {
     const res = await fetch("/api/login", {
       method: "POST",
