@@ -829,6 +829,40 @@ img {
   margin-top: 5px;
 }
 
+.image-source-toggle {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.image-source-toggle .toggle-btn {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.image-source-toggle .toggle-btn.active {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  color: #06060a;
+}
+
+.field-thumb-preview {
+  margin-top: 10px;
+  width: 100px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
 .field-error {
   font-size: 13px;
   color: #ff6b6b;
