@@ -1,82 +1,93 @@
 /* =========================================================
-   Tunton Luk — Storage Helper
-   Wrapper kecil di atas localStorage supaya index.html dan
-   admin.html selalu membaca/menulis sumber data yang sama.
+   Tunton Luk — Store
+   Wrapper di atas /api/data (yang di baliknya membaca/menulis
+   data/movies.json di GitHub). Dipakai bersama oleh index.html,
+   admin.html, dan film-detail.html.
    ========================================================= */
 
-const STORAGE_KEYS = {
-  movies: "tuntonluk_movies",
-  hero: "tuntonluk_hero",
-  session: "tuntonluk_admin_session",
+const SESSION_KEYS = {
+  loggedIn: "tuntonluk_admin_logged_in",
+  secret: "tuntonluk_admin_secret",
 };
 
 const Store = {
-  getMovies() {
-    const raw = localStorage.getItem(STORAGE_KEYS.movies);
-    if (!raw) {
-      this.saveMovies(DEFAULT_MOVIES);
-      return [...DEFAULT_MOVIES];
+  _cache: null,
+
+  async getData(forceRefresh = false) {
+    if (this._cache && !forceRefresh) return this._cache;
+
+    const res = await fetch("/api/data");
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || "Gagal mengambil data film dari server.");
     }
-    try {
-      return JSON.parse(raw);
-    } catch (e) {
-      return [...DEFAULT_MOVIES];
+    this._cache = await res.json();
+    return this._cache;
+  },
+
+  async getMovies(forceRefresh = false) {
+    const data = await this.getData(forceRefresh);
+    return data.movies || [];
+  },
+
+  async getHero(forceRefresh = false) {
+    const data = await this.getData(forceRefresh);
+    return data.hero || {};
+  },
+
+  async getMovieById(id) {
+    const movies = await this.getMovies();
+    return movies.find((m) => m.id === id) || null;
+  },
+
+  async saveData(data) {
+    const secret = this.getAdminSecret();
+    const res = await fetch("/api/data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Admin-Secret": secret || "",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || "Gagal menyimpan data ke GitHub.");
     }
+
+    this._cache = data;
+    return res.json();
   },
 
-  saveMovies(movies) {
-    localStorage.setItem(STORAGE_KEYS.movies, JSON.stringify(movies));
-  },
+  async login(username, password) {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+    const body = await res.json().catch(() => ({}));
 
-  addMovie(movie) {
-    const movies = this.getMovies();
-    movie.id = "m" + Date.now();
-    movies.unshift(movie);
-    this.saveMovies(movies);
-    return movie;
-  },
-
-  updateMovie(id, updates) {
-    const movies = this.getMovies();
-    const idx = movies.findIndex((m) => m.id === id);
-    if (idx === -1) return null;
-    movies[idx] = { ...movies[idx], ...updates };
-    this.saveMovies(movies);
-    return movies[idx];
-  },
-
-  deleteMovie(id) {
-    const movies = this.getMovies().filter((m) => m.id !== id);
-    this.saveMovies(movies);
-  },
-
-  getHero() {
-    const raw = localStorage.getItem(STORAGE_KEYS.hero);
-    if (!raw) {
-      this.saveHero(DEFAULT_HERO);
-      return { ...DEFAULT_HERO };
+    if (res.ok && body.success) {
+      sessionStorage.setItem(SESSION_KEYS.loggedIn, "true");
+      // Disimpan hanya di sessionStorage tab admin ini, dipakai sebagai
+      // bukti otorisasi saat memanggil POST /api/data.
+      sessionStorage.setItem(SESSION_KEYS.secret, password);
+      return true;
     }
-    try {
-      return JSON.parse(raw);
-    } catch (e) {
-      return { ...DEFAULT_HERO };
-    }
+    return false;
   },
 
-  saveHero(hero) {
-    localStorage.setItem(STORAGE_KEYS.hero, JSON.stringify(hero));
+  logout() {
+    sessionStorage.removeItem(SESSION_KEYS.loggedIn);
+    sessionStorage.removeItem(SESSION_KEYS.secret);
   },
 
   isAdminLoggedIn() {
-    return sessionStorage.getItem(STORAGE_KEYS.session) === "true";
+    return sessionStorage.getItem(SESSION_KEYS.loggedIn) === "true";
   },
 
-  setAdminLoggedIn(value) {
-    sessionStorage.setItem(STORAGE_KEYS.session, value ? "true" : "false");
-  },
-
-  resetToDefaults() {
-    this.saveMovies(DEFAULT_MOVIES);
-    this.saveHero(DEFAULT_HERO);
+  getAdminSecret() {
+    return sessionStorage.getItem(SESSION_KEYS.secret);
   },
 };
