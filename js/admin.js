@@ -5,6 +5,8 @@
 const loginView = document.getElementById("loginView");
 const dashboardView = document.getElementById("dashboardView");
 
+let workingData = null; // { hero, movies } - in-memory copy while editing
+
 function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
@@ -19,35 +21,56 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+function showAdminError(message) {
+  const banner = document.getElementById("adminErrorBanner");
+  banner.textContent = message;
+  banner.style.display = "block";
+}
+
+function clearAdminError() {
+  document.getElementById("adminErrorBanner").style.display = "none";
+}
+
 /* ---------- Auth gate ---------- */
-function checkAuth() {
+async function checkAuth() {
   if (Store.isAdminLoggedIn()) {
     loginView.style.display = "none";
     dashboardView.style.display = "block";
-    initDashboard();
+    await initDashboard();
   } else {
     loginView.style.display = "flex";
     dashboardView.style.display = "none";
   }
 }
 
-document.getElementById("loginForm").addEventListener("submit", (e) => {
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value;
   const errorBox = document.getElementById("loginError");
+  const submitBtn = document.getElementById("loginSubmitBtn");
 
-  if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-    Store.setAdminLoggedIn(true);
-    errorBox.textContent = "";
-    checkAuth();
-  } else {
-    errorBox.textContent = "Username atau password salah. Silakan coba lagi.";
+  errorBox.textContent = "";
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Memeriksa...";
+
+  try {
+    const ok = await Store.login(username, password);
+    if (ok) {
+      await checkAuth();
+    } else {
+      errorBox.textContent = "Username atau password salah. Silakan coba lagi.";
+    }
+  } catch (err) {
+    errorBox.textContent = `Gagal terhubung ke server: ${err.message}`;
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Masuk";
   }
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
-  Store.setAdminLoggedIn(false);
+  Store.logout();
   document.getElementById("loginForm").reset();
   checkAuth();
 });
@@ -55,7 +78,17 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
 /* ---------- Dashboard ---------- */
 let dashboardInitialized = false;
 
-function initDashboard() {
+async function initDashboard() {
+  clearAdminError();
+  try {
+    workingData = await Store.getData(true);
+  } catch (err) {
+    showAdminError(
+      `Gagal memuat data dari GitHub. Periksa ENV GITHUB_TOKEN / GITHUB_USERNAME / GITHUB_REPO di Vercel. Detail: ${err.message}`
+    );
+    return;
+  }
+
   renderHeroForm();
   renderMovieTable();
 
@@ -76,13 +109,32 @@ function initDashboard() {
   });
 }
 
+async function persist(successMessage) {
+  try {
+    await Store.saveData(workingData);
+    showToast(successMessage);
+    clearAdminError();
+    return true;
+  } catch (err) {
+    showAdminError(`Gagal menyimpan ke GitHub: ${err.message}`);
+    return false;
+  }
+}
+
 /* ---------- Hero editor ---------- */
 function renderHeroForm() {
-  const hero = Store.getHero();
-  document.getElementById("heroTitleInput").value = hero.title;
-  document.getElementById("heroDescInput").value = hero.description;
-  document.getElementById("heroImageInput").value = hero.image;
+  const hero = workingData.hero || {};
+  document.getElementById("heroTitleInput").value = hero.title || "";
+  document.getElementById("heroDescInput").value = hero.description || "";
+  document.getElementById("heroImageInput").value = hero.image || "";
   document.getElementById("heroCtaInput").value = hero.ctaLabel || "Tonton Sekarang";
+
+  const select = document.getElementById("heroFeaturedInput");
+  select.innerHTML = (workingData.movies || [])
+    .map((m) => `<option value="${m.id}">${escapeHtml(m.title)}</option>`)
+    .join("");
+  select.value = hero.featuredMovieId || "";
+
   updateHeroPreview();
 }
 
@@ -91,21 +143,28 @@ function updateHeroPreview() {
   document.getElementById("heroPreviewTitle").textContent = document.getElementById("heroTitleInput").value;
 }
 
-function handleHeroSave(e) {
+async function handleHeroSave(e) {
   e.preventDefault();
-  const hero = {
+  const btn = e.target.querySelector("button[type=submit]");
+  btn.disabled = true;
+  btn.textContent = "Menyimpan...";
+
+  workingData.hero = {
     title: document.getElementById("heroTitleInput").value.trim(),
     description: document.getElementById("heroDescInput").value.trim(),
     image: document.getElementById("heroImageInput").value.trim(),
     ctaLabel: document.getElementById("heroCtaInput").value.trim(),
+    featuredMovieId: document.getElementById("heroFeaturedInput").value,
   };
-  Store.saveHero(hero);
-  showToast("Banner hero berhasil disimpan");
+
+  await persist("Banner hero berhasil disimpan ke GitHub");
+  btn.disabled = false;
+  btn.textContent = "Simpan Banner";
 }
 
 /* ---------- Movie table ---------- */
 function renderMovieTable() {
-  const movies = Store.getMovies();
+  const movies = workingData.movies || [];
   const body = document.getElementById("movieTableBody");
 
   if (movies.length === 0) {
@@ -118,7 +177,7 @@ function renderMovieTable() {
       (m) => `
     <tr data-id="${m.id}">
       <td><div class="table-thumb"><img src="${m.poster}" alt="${escapeHtml(m.title)}" /></div></td>
-      <td>${escapeHtml(m.title)}</td>
+      <td>${escapeHtml(m.title)} ${m.videoUrl ? "🎬" : ""}</td>
       <td>${escapeHtml(m.author)}</td>
       <td>${m.rating ?? "-"}</td>
       <td>
@@ -139,21 +198,27 @@ function renderMovieTable() {
   body.querySelectorAll(".edit-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const id = btn.closest("tr").dataset.id;
-      const movie = Store.getMovies().find((m) => m.id === id);
+      const movie = workingData.movies.find((m) => m.id === id);
       openMovieModal(movie);
     });
   });
 
   body.querySelectorAll(".delete-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       const row = btn.closest("tr");
       const id = row.dataset.id;
-      const movie = Store.getMovies().find((m) => m.id === id);
-      if (confirm(`Hapus film "${movie.title}"? Tindakan ini tidak bisa dibatalkan.`)) {
-        Store.deleteMovie(id);
-        renderMovieTable();
-        showToast(`Film "${movie.title}" berhasil dihapus`);
+      const movie = workingData.movies.find((m) => m.id === id);
+      if (!confirm(`Hapus film "${movie.title}"? Tindakan ini tidak bisa dibatalkan.`)) return;
+
+      btn.disabled = true;
+      workingData.movies = workingData.movies.filter((m) => m.id !== id);
+      const ok = await persist(`Film "${movie.title}" berhasil dihapus`);
+      if (!ok) {
+        // rollback in-memory change if save failed
+        workingData.movies.push(movie);
       }
+      renderMovieTable();
+      renderHeroForm();
     });
   });
 }
@@ -172,6 +237,7 @@ function openMovieModal(movie = null) {
   document.getElementById("movieRating").value = movie ? movie.rating ?? "" : "";
   document.getElementById("moviePoster").value = movie ? movie.poster : "";
   document.getElementById("movieDescription").value = movie ? movie.description : "";
+  document.getElementById("movieVideoUrl").value = movie ? movie.videoUrl || "" : "";
 
   modal.classList.add("open");
 }
@@ -180,9 +246,24 @@ function closeMovieModal() {
   document.getElementById("movieModal").classList.remove("open");
 }
 
-function handleMovieSave(e) {
+async function handleMovieSave(e) {
   e.preventDefault();
+  const submitBtn = document.getElementById("modalSubmitBtn");
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Menyimpan...";
+
   const id = document.getElementById("movieId").value;
+  const videoInput = document.getElementById("movieVideoUrl").value.trim();
+
+  if (videoInput && !extractDriveFileId(videoInput)) {
+    alert(
+      "Link Google Drive tidak dikenali. Pastikan formatnya seperti https://drive.google.com/file/d/FILE_ID/view"
+    );
+    submitBtn.disabled = false;
+    submitBtn.textContent = id ? "Simpan Perubahan" : "Simpan Film";
+    return;
+  }
+
   const payload = {
     title: document.getElementById("movieTitle").value.trim(),
     author: document.getElementById("movieAuthor").value.trim(),
@@ -191,18 +272,27 @@ function handleMovieSave(e) {
       : null,
     poster: document.getElementById("moviePoster").value.trim(),
     description: document.getElementById("movieDescription").value.trim(),
+    videoUrl: videoInput,
   };
 
   if (id) {
-    Store.updateMovie(id, payload);
-    showToast(`Film "${payload.title}" berhasil diperbarui`);
+    const idx = workingData.movies.findIndex((m) => m.id === id);
+    workingData.movies[idx] = { ...workingData.movies[idx], ...payload };
   } else {
-    Store.addMovie(payload);
-    showToast(`Film "${payload.title}" berhasil ditambahkan`);
+    payload.id = "m" + Date.now();
+    workingData.movies.unshift(payload);
   }
 
-  closeMovieModal();
-  renderMovieTable();
+  const ok = await persist(id ? `Film "${payload.title}" berhasil diperbarui` : `Film "${payload.title}" berhasil ditambahkan`);
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = id ? "Simpan Perubahan" : "Simpan Film";
+
+  if (ok) {
+    closeMovieModal();
+    renderMovieTable();
+    renderHeroForm();
+  }
 }
 
 document.addEventListener("DOMContentLoaded", checkAuth);
