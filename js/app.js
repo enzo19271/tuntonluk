@@ -1,8 +1,9 @@
 /* =========================================================
-   Tunton Luk — Public site logic
+   Tunton Luk — Public site logic (index.html)
    ========================================================= */
 
 let allMovies = [];
+let heroData = null;
 
 function escapeHtml(str) {
   const div = document.createElement("div");
@@ -10,12 +11,29 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+}
+
+function showLoadError(err) {
+  const list = document.getElementById("moviesList");
+  list.innerHTML = `
+    <div class="empty-state" style="grid-column: 1 / -1;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
+      <p>Gagal memuat data film.<br><span style="font-size:12px;">${escapeHtml(err.message)}</span></p>
+    </div>
+  `;
+}
+
 function renderHero() {
-  const hero = Store.getHero();
-  document.getElementById("heroMedia").style.backgroundImage = `url('${hero.image}')`;
-  document.getElementById("heroTitle").textContent = hero.title;
-  document.getElementById("heroDesc").textContent = hero.description;
-  document.getElementById("heroCtaLabel").textContent = hero.ctaLabel || "Tonton Sekarang";
+  document.getElementById("heroMedia").style.backgroundImage = `url('${heroData.image}')`;
+  document.getElementById("heroTitle").textContent = heroData.title;
+  document.getElementById("heroDesc").textContent = heroData.description;
+  document.getElementById("heroCtaLabel").textContent = heroData.ctaLabel || "Tonton Sekarang";
 }
 
 function starIcon() {
@@ -27,19 +45,20 @@ function playIcon() {
 }
 
 function movieCardHtml(movie) {
+  const detailUrl = `film-detail.html?id=${encodeURIComponent(movie.id)}`;
   return `
     <article class="movie-card" data-id="${movie.id}">
-      <a class="poster-link" href="#" onclick="return false;">
+      <a class="poster-link" href="${detailUrl}">
         <img src="${movie.poster}" alt="Poster ${escapeHtml(movie.title)}" loading="lazy" />
       </a>
       <div class="movie-info">
         <div class="movie-title-row">
-          <h3>${escapeHtml(movie.title)}</h3>
+          <h3><a href="${detailUrl}" style="color:inherit;">${escapeHtml(movie.title)}</a></h3>
           ${movie.rating ? `<span class="movie-rating">${starIcon()} ${movie.rating}</span>` : ""}
         </div>
         <p class="movie-author">by ${escapeHtml(movie.author)}</p>
         <p class="movie-desc">${escapeHtml(movie.description)}</p>
-        <button class="movie-btn" type="button">${playIcon()} Tonton</button>
+        <a class="movie-btn" href="${detailUrl}">${playIcon()} Tonton</a>
       </div>
     </article>
   `;
@@ -62,22 +81,6 @@ function renderMovies(filterText = "") {
 
   empty.style.display = "none";
   list.innerHTML = filtered.map(movieCardHtml).join("");
-
-  list.querySelectorAll(".movie-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const card = btn.closest(".movie-card");
-      const movie = allMovies.find((m) => m.id === card.dataset.id);
-      showToast(`Memutar "${movie.title}" (mode demo)`);
-    });
-  });
-}
-
-function showToast(message) {
-  const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.classList.add("show");
-  clearTimeout(window.__toastTimer);
-  window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
 }
 
 /* ---------- Drawer ---------- */
@@ -119,16 +122,27 @@ function initSearch() {
 /* ---------- Hero CTA ---------- */
 function initHeroCta() {
   document.getElementById("heroCta").addEventListener("click", () => {
-    const hero = Store.getHero();
-    showToast(`Memutar "${hero.title}" (mode demo)`);
+    const featuredId = heroData.featuredMovieId;
+    const featured = featuredId ? allMovies.find((m) => m.id === featuredId) : null;
+    if (featured) {
+      window.location.href = `film-detail.html?id=${encodeURIComponent(featured.id)}`;
+    } else {
+      showToast("Film unggulan belum diatur oleh Admin.");
+    }
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  allMovies = Store.getMovies();
-  renderHero();
-  renderMovies();
+document.addEventListener("DOMContentLoaded", async () => {
   initDrawer();
-  initSearch();
-  initHeroCta();
+  try {
+    const data = await Store.getData();
+    heroData = data.hero;
+    allMovies = data.movies || [];
+    renderHero();
+    renderMovies();
+    initSearch();
+    initHeroCta();
+  } catch (err) {
+    showLoadError(err);
+  }
 });
