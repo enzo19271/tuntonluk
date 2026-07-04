@@ -30,14 +30,42 @@ function renderError(err) {
   `;
 }
 
-function renderMovie(movie) {
-  const embedUrl = getDriveEmbedUrl(movie.videoUrl);
+// Data lama cuma punya `videoUrl` tunggal - perlakukan sebagai satu
+// episode "Trailer" biar tetap tampil konsisten.
+function getEpisodes(movie) {
+  if (Array.isArray(movie.episodes) && movie.episodes.length) return movie.episodes;
+  if (movie.videoUrl) return [{ id: "legacy", label: "Trailer", videoUrl: movie.videoUrl }];
+  return [];
+}
 
-  const videoBlock = embedUrl
+function videoBlockHtml(videoUrl, posterFallback) {
+  const embedUrl = getDriveEmbedUrl(videoUrl);
+  return embedUrl
     ? `<iframe src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>`
-    : `<div class="no-video" style="background-image:url('${movie.poster}')">
+    : `<div class="no-video" style="background-image:url('${posterFallback}')">
          <span>Video belum tersedia untuk film ini.</span>
        </div>`;
+}
+
+function renderMovie(movie) {
+  const episodes = getEpisodes(movie);
+  const firstVideo = episodes[0]?.videoUrl || "";
+
+  const episodeListHtml = episodes.length
+    ? `
+      <div class="episode-list">
+        ${episodes
+          .map(
+            (ep, idx) => `
+          <button type="button" class="episode-btn${idx === 0 ? " active" : ""}" data-video="${escapeHtml(ep.videoUrl)}">
+            ${escapeHtml(ep.label)}
+          </button>
+        `
+          )
+          .join("")}
+      </div>
+    `
+    : "";
 
   document.getElementById("detailRoot").innerHTML = `
     <a href="index.html" class="detail-back-link">
@@ -46,7 +74,8 @@ function renderMovie(movie) {
     </a>
     <div class="detail-grid">
       <div>
-        <div class="detail-video-wrap">${videoBlock}</div>
+        <div class="detail-video-wrap" id="detailVideoWrap">${videoBlockHtml(firstVideo, movie.poster)}</div>
+        ${episodeListHtml}
       </div>
       <div class="detail-info">
         <h1>${escapeHtml(movie.title)}</h1>
@@ -58,6 +87,14 @@ function renderMovie(movie) {
       </div>
     </div>
   `;
+
+  document.querySelectorAll(".episode-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".episode-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("detailVideoWrap").innerHTML = videoBlockHtml(btn.dataset.video, movie.poster);
+    });
+  });
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
