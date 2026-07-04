@@ -26,11 +26,11 @@
           <input type="password" id="password" autocomplete="current-password" required />
         </div>
         <div class="field-error" id="loginError"></div>
-        <button type="submit" class="btn-primary">Masuk</button>
+        <button type="submit" class="btn-primary" id="loginSubmitBtn">Masuk</button>
       </form>
 
       <div class="credential-hint">
-        Demo credential — Username: <strong>admin</strong> · Password: <strong>admin123</strong>
+        Kredensial dicocokkan dengan ENV <code>ADMIN_USERNAME</code> / <code>ADMIN_PASSWORD</code> di Vercel.
       </div>
 
       <div style="text-align:center; margin-top:18px;">
@@ -52,6 +52,8 @@
     </header>
 
     <main class="admin-main container">
+
+      <div class="field-error" id="adminErrorBanner" style="display:none; background:rgba(255,107,107,0.1); border:1px solid rgba(255,107,107,0.3); border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:20px;"></div>
 
       <!-- Hero editor -->
       <section class="panel">
@@ -77,6 +79,11 @@
             <div class="field">
               <label for="heroCtaInput">Label Tombol</label>
               <input type="text" id="heroCtaInput" required />
+            </div>
+            <div class="field">
+              <label for="heroFeaturedInput">Film Unggulan (tujuan tombol "Tonton Sekarang")</label>
+              <select id="heroFeaturedInput"></select>
+              <div class="field-hint">Saat tombol banner diklik, pengunjung diarahkan ke halaman detail film ini.</div>
             </div>
             <button type="submit" class="btn-primary">Simpan Banner</button>
           </form>
@@ -154,6 +161,11 @@
           <label for="movieDescription">Deskripsi</label>
           <textarea id="movieDescription" required></textarea>
         </div>
+        <div class="field">
+          <label for="movieVideoUrl">Link Video Google Drive (opsional)</label>
+          <input type="text" id="movieVideoUrl" placeholder="https://drive.google.com/file/d/xxxxx/view" />
+          <div class="field-hint">Pastikan sharing sudah diset ke "Anyone with the link". Kosongkan jika belum ada video.</div>
+        </div>
         <div class="modal-actions">
           <button type="button" class="btn-secondary" id="modalCancelBtn">Batal</button>
           <button type="submit" class="btn-primary" id="modalSubmitBtn">Simpan Film</button>
@@ -164,8 +176,8 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="js/data.js"></script>
   <script src="js/storage.js"></script>
+  <script src="js/drive-utils.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>
