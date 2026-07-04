@@ -654,12 +654,26 @@ img {
   border: 1px solid var(--border);
 }
 
-.detail-video-wrap iframe,
 .detail-video-wrap .no-video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  border: 0;
+}
+
+/* Google Drive menampilkan bar judul + ikon "buka di Drive" di bagian
+   paling atas playernya. Kita tidak bisa menghapusnya langsung (beda
+   origin dari situs kita), jadi kita geser iframe ke atas dan crop
+   bagian yang keluar lewat overflow:hidden pada wrapper-nya. Kontrol
+   play/fullscreen di bawah tetap aman karena tinggi iframe kita
+   tambahkan sejumlah yang sama dengan pergeserannya. */
+.detail-video-wrap iframe {
+  position: absolute;
+  top: -48px;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 48px);
   border: 0;
 }
 
