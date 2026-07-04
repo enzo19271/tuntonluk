@@ -313,7 +313,7 @@ img {
    Hero
    ========================================================= */
 .hero-section {
-  padding: 24px 0 0;
+  padding-top: 24px;
 }
 
 .hero {
@@ -390,7 +390,8 @@ img {
    Movies section
    ========================================================= */
 .movies-section {
-  padding: 36px 0 60px;
+  padding-top: 36px;
+  padding-bottom: 60px;
 }
 
 .section-title {
@@ -499,10 +500,12 @@ img {
   color: var(--text-secondary);
   line-height: 1.55;
   margin: 0 0 14px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+}
+
+.read-more-link {
+  color: var(--cyan);
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .movie-btn {
