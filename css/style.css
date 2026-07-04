@@ -746,6 +746,76 @@ img {
   height: 14px;
 }
 
+/* Pilihan episode di halaman detail film */
+.episode-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.episode-btn {
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.episode-btn:hover {
+  border-color: var(--cyan);
+  color: var(--text);
+}
+
+.episode-btn.active {
+  background: var(--gradient);
+  border-color: transparent;
+  color: #06060a;
+}
+
+/* Editor daftar episode di panel admin */
+.episode-list-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.episode-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.episode-row .episode-label {
+  flex: 0 0 140px;
+}
+
+.episode-row .episode-url {
+  flex: 1;
+  min-width: 0;
+}
+
+.episode-row input {
+  padding: 10px 12px;
+  font-size: 13px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.episode-row input:focus {
+  border-color: var(--cyan);
+}
+
+.episode-row .episode-remove-btn {
+  flex-shrink: 0;
+}
+
 @media (min-width: 900px) {
   .detail-grid {
     grid-template-columns: 2fr 1fr;
