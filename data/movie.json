@@ -24,15 +24,6 @@
       "poster": "https://picsum.photos/seed/laughandlaugh/500/700",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi mauris, vestibulum nec fermentum lobortis, mollis nec leo.",
       "videoUrl": ""
-    },
-    {
-      "id": "m2",
-      "title": "The Karate",
-      "author": "Nezo",
-      "rating": 7.9,
-      "poster": "https://picsum.photos/seed/thekarate/500/700",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi mauris, vestibulum nec fermentum lobortis, mollis nec leo.",
-      "videoUrl": ""
     }
   ]
 }
