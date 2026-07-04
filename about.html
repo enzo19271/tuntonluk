@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About Us — Tunton Luk</title>
+<meta name="description" content="Tunton Luk, platform streaming film. Tonton film favoritmu kapan saja." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Buka menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+
+      <a href="index.html" class="logo">Tunton<span class="accent">Luk</span></a>
+
+      <nav class="nav-desktop">
+        <a href="index.html">Beranda</a>
+        <a href="#">Premium</a>
+        <a href="about.html" class="active">About us</a>
+      </nav>
+
+      <div class="search-desktop">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchDesktop" placeholder="Cari disini......" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== DRAWER MENU ===================== -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span class="logo">Tunton<span class="accent">Luk</span></span>
+      <button class="drawer-close" id="drawerClose" aria-label="Tutup menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <nav>
+      <a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 10v10h14V10"/></svg>
+        Beranda
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 15 8 22 9 17 14 18 21 12 17.5 6 21 7 14 2 9 9 8 12 2Z"/></svg>
+        Premium
+      </a>
+      <a href="about.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="16" x2="12" y2="11"/><line x1="12" y1="8" x2="12" y2="8"/></svg>
+        About us
+      </a>
+    </nav>
+    <div class="drawer-divider"></div>
+    <nav>
+      <a href="admin.html" class="admin-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+        Admin
+      </a>
+    </nav>
+    <div class="drawer-footer">Tunton Luk &copy; 2026</div>
+  </aside>
+
+  <!-- ===================== ABOUT US ===================== -->
+  <section class="about-section container">
+
+    <!-- Info card: nama web, versi, pembuat, tanggal produksi -->
+    <div class="about-info-card">
+      <div class="about-info-logo">Tunton<span class="accent">Luk</span></div>
+      <div class="about-info-grid">
+        <div class="about-info-item">
+          <span class="about-info-label">Versi Aplikasi</span>
+          <span class="about-info-value">v1.0.0</span>
+        </div>
+        <div class="about-info-item">
+          <span class="about-info-label">Dibuat oleh</span>
+          <span class="about-info-value">Lanskap Cinema</span>
+        </div>
+        <div class="about-info-item">
+          <span class="about-info-label">Tanggal Produksi</span>
+          <span class="about-info-value">12 Juli 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tentang kami -->
+    <div class="about-block">
+      <h2 class="about-heading">Tentang Kami</h2>
+      <p class="about-text">
+        Tunton Luk adalah platform streaming film pendek dan karya independen yang lahir dari
+        semangat untuk memberi ruang bagi karya-karya lokal agar lebih mudah ditonton dan
+        dijangkau oleh siapa saja. Nama "Tunton Luk" sendiri diambil dari bahasa daerah yang
+        berarti "tonton dulu" — sederhana, hangat, dan mengajak setiap orang untuk berhenti
+        sejenak menikmati cerita.
+      </p>
+      <p class="about-text">
+        Kami percaya setiap karya, sekecil apa pun produksinya, layak mendapat panggung.
+        Karena itu Tunton Luk dibangun sebagai ruang tayang yang ringan, cepat, dan gratis
+        untuk dinikmati semua orang.
+      </p>
+    </div>
+
+    <!-- Misi -->
+    <div class="about-block">
+      <h2 class="about-heading">Misi Kami</h2>
+      <div class="about-value-grid">
+        <div class="value-card">
+          <div class="value-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <h3>Aksesibilitas</h3>
+          <p>Menyediakan tontonan yang mudah diakses kapan saja, tanpa hambatan biaya.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 15 8.5 22 9.5 17 14.3 18.2 21 12 17.8 5.8 21 7 14.3 2 9.5 9 8.5Z"/></svg>
+          </div>
+          <h3>Kualitas Karya</h3>
+          <p>Menampilkan film-film pendek pilihan yang diproduksi dengan sepenuh hati.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Komunitas Kreator</h3>
+          <p>Merangkul sineas dan kreator lokal untuk terus berkarya dan dikenal luas.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kenapa memilih kami -->
+    <div class="about-block">
+      <h2 class="about-heading">Kenapa Tunton Luk?</h2>
+      <div class="about-feature-list">
+        <div class="feature-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>100% gratis untuk ditonton, tanpa biaya berlangganan.</span>
+        </div>
+        <div class="feature-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Ringan dan cepat diakses dari perangkat apa pun.</span>
+        </div>
+        <div class="feature-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Konten diperbarui langsung oleh tim kurator kami.</span>
+        </div>
+        <div class="feature-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Mendukung karya anak bangsa dan sineas independen.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact person -->
+    <div class="about-block">
+      <h2 class="about-heading">Hubungi Kami</h2>
+      <p class="about-text" style="margin-bottom:22px;">
+        Punya pertanyaan, kritik, saran, atau ingin mengajukan karyamu untuk tayang di
+        Tunton Luk? Silakan hubungi kami melalui salah satu kanal berikut.
+      </p>
+      <div class="contact-grid">
+        <a href="mailto:hello@tuntonluk.com" class="contact-card">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+          </div>
+          <div>
+            <span class="contact-label">Email</span>
+            <span class="contact-value">hello@tuntonluk.com</span>
+          </div>
+        </a>
+        <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="contact-card">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-11.8 7.8L4 21l1.7-5.2A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+          </div>
+          <div>
+            <span class="contact-label">WhatsApp</span>
+            <span class="contact-value">+62 812-3456-7890</span>
+          </div>
+        </a>
+        <a href="https://instagram.com/tuntonluk" target="_blank" rel="noopener" class="contact-card">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37Z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </div>
+          <div>
+            <span class="contact-label">Instagram</span>
+            <span class="contact-value">@tuntonluk</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="about-back-cta">
+      <a href="index.html" class="btn-gradient" style="display:inline-flex;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Kembali ke Beranda
+      </a>
+    </div>
+
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">&copy; 2026 Tunton Luk. Dibuat untuk keperluan demo.</div>
+  </footer>
+
+  <script>
+    document.getElementById("hamburgerBtn")?.addEventListener("click", () => {
+      document.getElementById("drawer")?.classList.add("open");
+      document.getElementById("drawerOverlay")?.classList.add("open");
+    });
+    document.getElementById("drawerClose")?.addEventListener("click", () => {
+      document.getElementById("drawer")?.classList.remove("open");
+      document.getElementById("drawerOverlay")?.classList.remove("open");
+    });
+    document.getElementById("drawerOverlay")?.addEventListener("click", () => {
+      document.getElementById("drawer")?.classList.remove("open");
+      document.getElementById("drawerOverlay")?.classList.remove("open");
+    });
+  </script>
+</body>
+</html>
