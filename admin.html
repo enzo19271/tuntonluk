@@ -71,10 +71,22 @@
               <label for="heroDescInput">Deskripsi Singkat</label>
               <textarea id="heroDescInput" required></textarea>
             </div>
-            <div class="field">
-              <label for="heroImageInput">URL Gambar Banner</label>
-              <input type="url" id="heroImageInput" required />
-              <div class="field-hint">Gunakan URL gambar landscape, contoh: https://picsum.photos/1600/700</div>
+            <div class="field image-field" data-input="heroImageInput" data-folder="banners">
+              <label>Gambar Banner</label>
+              <div class="image-source-toggle">
+                <button type="button" class="toggle-btn active" data-mode="link">Link URL</button>
+                <button type="button" class="toggle-btn" data-mode="upload">Upload Gambar</button>
+              </div>
+
+              <div data-mode-panel="link">
+                <input type="url" id="heroImageInput" required />
+                <div class="field-hint">Gunakan URL gambar landscape, contoh: https://picsum.photos/1600/700</div>
+              </div>
+
+              <div data-mode-panel="upload" style="display:none;">
+                <input type="file" id="heroImageInput_file" accept="image/*" />
+                <div class="field-hint" id="heroImageInput_uploadStatus">Gambar akan diupload &amp; disimpan ke repo GitHub kamu.</div>
+              </div>
             </div>
             <div class="field">
               <label for="heroCtaInput">Label Tombol</label>
@@ -152,10 +164,24 @@
             <input type="number" id="movieRating" min="0" max="10" step="0.1" />
           </div>
         </div>
-        <div class="field">
-          <label for="moviePoster">URL Poster</label>
-          <input type="url" id="moviePoster" required />
-          <div class="field-hint">Gunakan gambar potrait, contoh: https://picsum.photos/500/700</div>
+        <div class="field image-field" data-input="moviePoster" data-folder="posters">
+          <label>Poster Film</label>
+          <div class="image-source-toggle">
+            <button type="button" class="toggle-btn active" data-mode="link">Link URL</button>
+            <button type="button" class="toggle-btn" data-mode="upload">Upload Gambar</button>
+          </div>
+
+          <div data-mode-panel="link">
+            <input type="url" id="moviePoster" required />
+            <div class="field-hint">Gunakan gambar potrait, contoh: https://picsum.photos/500/700</div>
+          </div>
+
+          <div data-mode-panel="upload" style="display:none;">
+            <input type="file" id="moviePoster_file" accept="image/*" />
+            <div class="field-hint" id="moviePoster_uploadStatus">Gambar akan diupload &amp; disimpan ke repo GitHub kamu.</div>
+          </div>
+
+          <img id="moviePoster_preview" class="field-thumb-preview" style="display:none;" alt="Preview poster" />
         </div>
         <div class="field">
           <label for="movieDescription">Deskripsi</label>
