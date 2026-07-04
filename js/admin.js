@@ -107,6 +107,78 @@ async function initDashboard() {
   ["heroTitleInput", "heroImageInput"].forEach((id) => {
     document.getElementById(id).addEventListener("input", updateHeroPreview);
   });
+
+  document.querySelectorAll(".image-field").forEach(initImageField);
+}
+
+/* ---------- Image field (Link URL / Upload Gambar toggle) ---------- */
+const imageFieldControllers = {};
+
+function initImageField(container) {
+  const inputId = container.dataset.input;
+  const folder = container.dataset.folder || "uploads";
+  const urlInput = document.getElementById(inputId);
+  const fileInput = document.getElementById(`${inputId}_file`);
+  const statusEl = document.getElementById(`${inputId}_uploadStatus`);
+  const previewImg = document.getElementById(`${inputId}_preview`);
+  const linkPanel = container.querySelector('[data-mode-panel="link"]');
+  const uploadPanel = container.querySelector('[data-mode-panel="upload"]');
+  const toggleBtns = container.querySelectorAll(".toggle-btn");
+
+  function setMode(mode) {
+    toggleBtns.forEach((b) => b.classList.toggle("active", b.dataset.mode === mode));
+    linkPanel.style.display = mode === "link" ? "" : "none";
+    uploadPanel.style.display = mode === "upload" ? "" : "none";
+  }
+
+  toggleBtns.forEach((btn) => btn.addEventListener("click", () => setMode(btn.dataset.mode)));
+
+  function updateThumbPreview() {
+    if (!previewImg) return;
+    const val = urlInput.value.trim();
+    if (val) {
+      previewImg.src = val;
+      previewImg.style.display = "block";
+    } else {
+      previewImg.style.display = "none";
+    }
+  }
+  urlInput.addEventListener("input", updateThumbPreview);
+
+  if (fileInput) {
+    fileInput.addEventListener("change", async () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      if (file.size > 4 * 1024 * 1024) {
+        statusEl.textContent = "Ukuran gambar terlalu besar (maksimal sekitar 4MB).";
+        return;
+      }
+
+      statusEl.textContent = "Mengupload ke GitHub...";
+      try {
+        const url = await Store.uploadImage(file, folder);
+        urlInput.value = url;
+        urlInput.dispatchEvent(new Event("input", { bubbles: true }));
+        statusEl.textContent = "Berhasil diupload ✓";
+        setMode("link");
+        fileInput.value = "";
+      } catch (err) {
+        statusEl.textContent = `Gagal upload: ${err.message}`;
+      }
+    });
+  }
+
+  imageFieldControllers[inputId] = {
+    reset() {
+      setMode("link");
+      if (fileInput) fileInput.value = "";
+      if (statusEl) statusEl.textContent = "Gambar akan diupload & disimpan ke repo GitHub kamu.";
+      updateThumbPreview();
+    },
+  };
+
+  updateThumbPreview();
 }
 
 async function persist(successMessage) {
@@ -238,6 +310,8 @@ function openMovieModal(movie = null) {
   document.getElementById("moviePoster").value = movie ? movie.poster : "";
   document.getElementById("movieDescription").value = movie ? movie.description : "";
   document.getElementById("movieVideoUrl").value = movie ? movie.videoUrl || "" : "";
+
+  if (imageFieldControllers.moviePoster) imageFieldControllers.moviePoster.reset();
 
   modal.classList.add("open");
 }
