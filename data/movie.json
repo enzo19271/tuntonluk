@@ -19,11 +19,17 @@
     {
       "title": "ARDI: The Prequel",
       "author": "Enzo Fahrezi, Ridho Alzakki",
-      "rating": 7.6,
+      "rating": 6.8,
       "poster": "https://raw.githubusercontent.com/enzo19271/tuntonluk/main/assets/posters/1783140415175-176069.jpg",
-      "description": "Just short trailer",
-      "videoUrl": "https://drive.google.com/file/d/1rRWNN5jd76HlOeiO-rBBBpmUCmeHAfbz/view?usp=drivesdk",
-      "id": "m1783138220778"
+      "description": "Menceritakan dua remaja yang tumbuh dewasa dalam kemiskinan yang bernama Ardi dan Dimas. Suatu hari kejadian yang menimpa keluarga Ardi membuat Ardi melakukan hal yang sepantasnya dilakukan demi keluar dari garis kemiskinan.",
+      "id": "m1783138220778",
+      "episodes": [
+        {
+          "id": "ep17831530254900",
+          "label": "Trailer",
+          "videoUrl": "https://drive.google.com/file/d/1rRWNN5jd76HlOeiO-rBBBpmUCmeHAfbz/view?usp=drivesdk"
+        }
+      ]
     },
     {
       "id": "m1",
