@@ -8,6 +8,15 @@
   },
   "movies": [
     {
+      "title": "Merebah Lelah Di Pulau Timah",
+      "author": "Enzi Fahrezi, Afdal Maulana",
+      "rating": 7.5,
+      "poster": "https://raw.githubusercontent.com/enzo19271/tuntonluk/main/assets/posters/1783148516873-176174.png",
+      "description": "Film pendek hybrid dalam ajang mengikuti lomba. film pendek ini mengisahkan seorang teman lama yang sudah lama tak kembali ke kampung halaman nya yaitu Bangka Belitung.",
+      "videoUrl": "https://drive.google.com/file/d/1JEuKU8N19m4nhT5nDtVpHlynSQUjRcJU/view?usp=drivesdk",
+      "id": "m1783148525835"
+    },
+    {
       "title": "ARDI: The Prequel",
       "author": "Enzo Fahrezi",
       "rating": 7.6,
