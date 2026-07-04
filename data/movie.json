@@ -33,12 +33,18 @@
     },
     {
       "id": "m1",
-      "title": "LASTK13: Wisudawan",
+      "title": "LASTK13: Video Angkatan",
       "author": "Enzo Fahrezi, Zani Sumanta Dkk",
       "rating": 8,
       "poster": "https://raw.githubusercontent.com/enzo19271/tuntonluk/main/assets/posters/1783146919169-176165.png",
       "description": "Video angkatan lulusan terakhir kurikulum 2013, lulusan SMAN 1 Namang Tahun ajaran 2023/2024.",
-      "videoUrl": "https://drive.google.com/file/d/1CdltO8D_1hB5fbmugkI17bsTBDh4HTlq/view?usp=drivesdk"
+      "episodes": [
+        {
+          "id": "ep17831580218560",
+          "label": "Trailer",
+          "videoUrl": "https://drive.google.com/file/d/1CdltO8D_1hB5fbmugkI17bsTBDh4HTlq/view?usp=drivesdk"
+        }
+      ]
     }
   ]
 }
