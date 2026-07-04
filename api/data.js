@@ -30,7 +30,7 @@ function getConfig() {
     );
   }
 
-  const path = DATA_PATH || "data/movies.json";
+  const path = DATA_PATH || "data/movie.json";
   const branch = GITHUB_BRANCH || "main";
   const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${path}`;
 
