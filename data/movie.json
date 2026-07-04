@@ -1,0 +1,65 @@
+{
+  "hero": {
+    "title": "Judul Film Rating Tinggi",
+    "description": "Deskripsi Singkat Film nya | Lorem ipsum balabalblalalblbalblbalblablablablblablablblblablbalblablblbalblbalblbaalal",
+    "image": "https://picsum.photos/seed/tuntonluk-hero/1600/700",
+    "ctaLabel": "Tonton Sekarang",
+    "featuredMovieId": "m1"
+  },
+  "movies": [
+    {
+      "id": "m1",
+      "title": "Laugh and Laugh",
+      "author": "Nezo",
+      "rating": 8.4,
+      "poster": "https://picsum.photos/seed/laughandlaugh/500/700",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi mauris, vestibulum nec fermentum lobortis, mollis nec leo.",
+      "videoUrl": ""
+    },
+    {
+      "id": "m2",
+      "title": "The Karate",
+      "author": "Nezo",
+      "rating": 7.9,
+      "poster": "https://picsum.photos/seed/thekarate/500/700",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi mauris, vestibulum nec fermentum lobortis, mollis nec leo.",
+      "videoUrl": ""
+    },
+    {
+      "id": "m3",
+      "title": "Sadness",
+      "author": "Nezo",
+      "rating": 7.2,
+      "poster": "https://picsum.photos/seed/sadness/500/700",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi mauris, vestibulum nec fermentum lobortis, mollis nec leo.",
+      "videoUrl": ""
+    },
+    {
+      "id": "m4",
+      "title": "The Betrayal",
+      "author": "Nezo",
+      "rating": 8.1,
+      "poster": "https://picsum.photos/seed/thebetrayal/500/700",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi mauris, vestibulum nec fermentum lobortis, mollis nec leo.",
+      "videoUrl": ""
+    },
+    {
+      "id": "m5",
+      "title": "Cats & Friends",
+      "author": "Nezo",
+      "rating": 8.8,
+      "poster": "https://picsum.photos/seed/catsfriends/500/700",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi mauris, vestibulum nec fermentum lobortis, mollis nec leo.",
+      "videoUrl": ""
+    },
+    {
+      "id": "m6",
+      "title": "Cartoon",
+      "author": "Nezo",
+      "rating": 8.0,
+      "poster": "https://picsum.photos/seed/cartoonkid/500/700",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi mauris, vestibulum nec fermentum lobortis, mollis nec leo.",
+      "videoUrl": ""
+    }
+  ]
+}
