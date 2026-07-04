@@ -1,7 +1,7 @@
 {
   "hero": {
-    "title": "Judul Film Rating Tinggi",
-    "description": "Deskripsi Singkat Film nya | Lorem ipsum balabalblalalblbalblbalblablablablblablablblblablbalblablblbalblbalblbaalal",
+    "title": "ARDI: The Prequel",
+    "description": "Short Trailer terbaik buatan Lans.cine_ yang di sutradarai oleh Dimz Beta Fish dkk.",
     "image": "https://picsum.photos/seed/tuntonluk-hero/1600/700",
     "ctaLabel": "Tonton Sekarang",
     "featuredMovieId": "m1"
@@ -56,7 +56,7 @@
       "id": "m6",
       "title": "Cartoon",
       "author": "Nezo",
-      "rating": 8.0,
+      "rating": 8,
       "poster": "https://picsum.photos/seed/cartoonkid/500/700",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nisi mauris, vestibulum nec fermentum lobortis, mollis nec leo.",
       "videoUrl": ""
