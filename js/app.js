@@ -44,8 +44,18 @@ function playIcon() {
   return `<svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M8 5v14l11-7z"/></svg>`;
 }
 
+function truncateText(text, maxLen = 140) {
+  const safeText = text || "";
+  if (safeText.length <= maxLen) return { text: safeText, truncated: false };
+  const cut = safeText.slice(0, maxLen);
+  const lastSpace = cut.lastIndexOf(" ");
+  const clean = (lastSpace > 40 ? cut.slice(0, lastSpace) : cut).trim();
+  return { text: clean, truncated: true };
+}
+
 function movieCardHtml(movie) {
   const detailUrl = `film-detail.html?id=${encodeURIComponent(movie.id)}`;
+  const { text: shortDesc, truncated } = truncateText(movie.description, 140);
   return `
     <article class="movie-card" data-id="${movie.id}">
       <a class="poster-link" href="${detailUrl}">
@@ -57,7 +67,11 @@ function movieCardHtml(movie) {
           ${movie.rating ? `<span class="movie-rating">${starIcon()} ${movie.rating}</span>` : ""}
         </div>
         <p class="movie-author">by ${escapeHtml(movie.author)}</p>
-        <p class="movie-desc">${escapeHtml(movie.description)}</p>
+        <p class="movie-desc">${escapeHtml(shortDesc)}${
+          truncated
+            ? ` <a class="read-more-link" href="${detailUrl}">Baca selengkapnya...</a>`
+            : ""
+        }</p>
         <a class="movie-btn" href="${detailUrl}">${playIcon()} Tonton</a>
       </div>
     </article>
