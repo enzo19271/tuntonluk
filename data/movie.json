@@ -37,7 +37,7 @@
     {
       "title": "ARDI: The Prequel",
       "author": "Enzo Fahrezi, Ridho Alzakki",
-      "rating": 8.7,
+      "rating": 8,
       "poster": "https://raw.githubusercontent.com/enzo19271/tuntonluk/main/assets/posters/1783140415175-176069.jpg",
       "description": "Menceritakan dua remaja yang tumbuh dewasa dalam kemiskinan yang bernama Ardi dan Dimas. Suatu hari kejadian yang menimpa keluarga Ardi membuat Ardi melakukan hal yang sepantasnya dilakukan demi keluar dari garis kemiskinan.",
       "id": "m1783138220778",
@@ -73,6 +73,11 @@
           "name": "Patur Rahman",
           "stars": 5,
           "ts": 1783219606587
+        },
+        {
+          "name": "Ghoni",
+          "stars": 3,
+          "ts": 1783221864301
         }
       ],
       "comments": [
