@@ -8,6 +8,20 @@
   },
   "movies": [
     {
+      "title": "Merebah Lelah Di Pulau Timah",
+      "author": "Enzo Fahrezi, Alwan Nabil",
+      "poster": "https://raw.githubusercontent.com/enzo19271/tuntonluk/main/assets/posters/1783148516873-176174.png",
+      "description": "Film Pendek mengisahkan teman lama yang rindu dengan kampung halaman nya. film ini dibuat untuk mengikuti perlombaan film.",
+      "episodes": [
+        {
+          "id": "ep17832190129750",
+          "label": "Movie",
+          "videoUrl": "https://drive.google.com/file/d/1JEuKU8N19m4nhT5nDtVpHlynSQUjRcJU/view?usp=drivesdk"
+        }
+      ],
+      "id": "m1783219012975"
+    },
+    {
       "title": "ARDI: The Prequel",
       "author": "Enzo Fahrezi, Ridho Alzakki",
       "rating": 8,
