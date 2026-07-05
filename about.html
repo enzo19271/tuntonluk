@@ -65,7 +65,11 @@
         Admin
       </a>
     </nav>
-    <div class="drawer-footer">Tunton Luk &copy; 2026</div>
+    <div class="drawer-footer">
+      <span class="auth-user-label"></span>
+      <a href="#" id="authLogoutBtn" class="auth-logout-link">Keluar</a>
+      Tunton Luk &copy; 2026
+    </div>
   </aside>
 
   <!-- ===================== ABOUT US ===================== -->
@@ -184,7 +188,7 @@
             <span class="contact-value">+62 831-6169-5044</span>
           </div>
         </a>
-        <a href="https://instagram.com/tuntonluk" target="_blank" rel="noopener" class="contact-card">
+        <a href="https://instagram.com/nzofhrzi" target="_blank" rel="noopener" class="contact-card">
           <div class="contact-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37Z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
           </div>
@@ -196,14 +200,13 @@
       </div>
     </div>
 
-    
-
   </section>
 
   <footer class="site-footer">
     <div class="container">&copy; 2026 Tunton Luk. Dibuat untuk keperluan demo.</div>
   </footer>
 
+  <script src="js/auth-gate.js"></script>
   <script>
     document.getElementById("hamburgerBtn")?.addEventListener("click", () => {
       document.getElementById("drawer")?.classList.add("open");
