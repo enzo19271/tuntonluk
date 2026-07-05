@@ -19,7 +19,15 @@
           "videoUrl": "https://drive.google.com/file/d/1JEuKU8N19m4nhT5nDtVpHlynSQUjRcJU/view?usp=drivesdk"
         }
       ],
-      "id": "m1783219012975"
+      "id": "m1783219012975",
+      "ratings": [
+        {
+          "name": "Enzo Fahrezi",
+          "stars": 4,
+          "ts": 1783219030415
+        }
+      ],
+      "rating": 8
     },
     {
       "title": "ARDI: The Prequel",
