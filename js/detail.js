@@ -47,6 +47,69 @@ function videoBlockHtml(videoUrl, posterFallback) {
        </div>`;
 }
 
+function ratingWidgetHtml(movie) {
+  const ratings = Array.isArray(movie.ratings) ? movie.ratings : [];
+  const count = ratings.length;
+  const session = window.TuntonAuth ? window.TuntonAuth.getSession() : null;
+  const myRating = session
+    ? ratings.find((r) => r.name.toLowerCase() === session.name.toLowerCase())
+    : null;
+
+  return `
+    <div class="rating-widget">
+      <div class="rating-widget-label">Beri rating kamu:</div>
+      <div class="star-picker" id="starPicker">
+        ${[1, 2, 3, 4, 5]
+          .map(
+            (n) => `
+          <button type="button" class="star-btn${myRating && n <= myRating.stars ? " filled" : ""}" data-star="${n}" aria-label="${n} bintang">★</button>
+        `
+          )
+          .join("")}
+      </div>
+      <div class="rating-widget-meta">${count > 0 ? `${count} orang sudah memberi rating` : "Belum ada yang memberi rating"}</div>
+      <div class="rating-widget-status" id="ratingStatus"></div>
+    </div>
+  `;
+}
+
+function bindRatingWidget(movie) {
+  const buttons = document.querySelectorAll("#starPicker .star-btn");
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const session = window.TuntonAuth ? window.TuntonAuth.getSession() : null;
+      if (!session) {
+        alert("Sesi login tidak ditemukan. Silakan muat ulang halaman.");
+        return;
+      }
+
+      const stars = Number(btn.dataset.star);
+      buttons.forEach((b, i) => b.classList.toggle("filled", i < stars));
+
+      const statusEl = document.getElementById("ratingStatus");
+      statusEl.textContent = "Menyimpan rating...";
+      buttons.forEach((b) => (b.disabled = true));
+
+      try {
+        const res = await fetch("/api/rate-movie", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ movieId: movie.id, stars, name: session.name, token: session.token }),
+        });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(body.error || "Gagal menyimpan rating.");
+
+        statusEl.textContent = "Rating kamu tersimpan. Terima kasih!";
+        const updated = await Store.getMovieById(movie.id, true);
+        if (updated) renderMovie(updated);
+      } catch (err) {
+        statusEl.textContent = `Gagal: ${err.message}`;
+        buttons.forEach((b) => (b.disabled = false));
+      }
+    });
+  });
+}
+
 function renderMovie(movie) {
   const episodes = getEpisodes(movie);
   const firstVideo = episodes[0]?.videoUrl || "";
@@ -84,6 +147,7 @@ function renderMovie(movie) {
           ${movie.rating ? `<span class="movie-rating">${starIcon()} ${movie.rating}</span>` : ""}
         </div>
         <p class="detail-desc">${escapeHtml(movie.description)}</p>
+        ${ratingWidgetHtml(movie)}
       </div>
     </div>
   `;
@@ -95,6 +159,8 @@ function renderMovie(movie) {
       document.getElementById("detailVideoWrap").innerHTML = videoBlockHtml(btn.dataset.video, movie.poster);
     });
   });
+
+  bindRatingWidget(movie);
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
