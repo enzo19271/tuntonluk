@@ -231,7 +231,7 @@ function bindCommentsWidget(movie) {
       textarea.value = "";
       charCount.textContent = "0";
 
-      setTimeout(() => {
+      setTimeout(async () => {
         const updated = await Store.getMovieById(movie.id, true);
         if (updated) renderMovie(updated);
       }, 500);
