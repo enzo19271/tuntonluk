@@ -35,8 +35,8 @@ const Store = {
     return data.hero || {};
   },
 
-  async getMovieById(id) {
-    const movies = await this.getMovies();
+  async getMovieById(id, forceRefresh = false) {
+    const movies = await this.getMovies(forceRefresh);
     return movies.find((m) => m.id === id) || null;
   },
 
