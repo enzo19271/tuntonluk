@@ -1464,3 +1464,159 @@ img {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* =========================================================
+   Auth Gate (login / register nama + PIN)
+   ========================================================= */
+.auth-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(6, 6, 10, 0.92);
+  backdrop-filter: blur(6px);
+}
+
+.auth-gate-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-glow);
+}
+
+.auth-gate-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.auth-gate-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+.auth-gate-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-gate-card input {
+  padding: 12px 14px;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text-primary);
+}
+
+.auth-gate-card input:focus {
+  border-color: var(--cyan);
+}
+
+.auth-gate-error {
+  font-size: 12px;
+  color: #ff6b6b;
+  min-height: 14px;
+}
+
+.auth-gate-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.6;
+  margin: 16px 0 0;
+}
+
+.auth-user-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cyan);
+  margin-bottom: 4px;
+}
+
+.auth-logout-link {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.auth-logout-link:hover {
+  color: var(--text-primary);
+}
+
+/* =========================================================
+   Star rating widget (halaman detail)
+   ========================================================= */
+.rating-widget {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.rating-widget-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.star-picker {
+  display: flex;
+  gap: 6px;
+}
+
+.star-btn {
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--border);
+  cursor: pointer;
+  transition: color 0.15s ease, transform 0.15s ease;
+  padding: 2px;
+}
+
+.star-btn:hover {
+  transform: scale(1.15);
+}
+
+.star-btn.filled {
+  color: var(--cyan);
+}
+
+.rating-widget-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.rating-widget-status {
+  font-size: 12px;
+  color: var(--cyan);
+  margin-top: 4px;
+  min-height: 14px;
+}
+
+/* Rating read-only di panel admin */
+.rating-readonly {
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
