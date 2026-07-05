@@ -110,6 +110,174 @@ function bindRatingWidget(movie) {
   });
 }
 
+function commentsWidgetHtml(movie) {
+  const comments = Array.isArray(movie.comments) ? movie.comments : [];
+  const session = window.TuntonAuth ? window.TuntonAuth.getSession() : null;
+
+  return `
+    <div class="comments-widget">
+      <div class="comments-title">Komentar (${comments.length})</div>
+
+      ${
+        session
+          ? `
+        <div class="comment-form">
+          <textarea id="commentInput" placeholder="Berkomentar.. " maxlength="500"></textarea>
+          <div class="comment-form-footer">
+            <span class="char-count"><span id="charCount">0</span>/500</span>
+            <button type="button" class="btn-gradient" id="submitCommentBtn">Kirim</button>
+          </div>
+          <div id="commentStatus" class="comment-status"></div>
+        </div>
+      `
+          : `<p style="color:var(--text-secondary); font-size:13px;">Login dulu untuk memberikan komentar.</p>`
+      }
+
+      <div id="commentsList" class="comments-list">
+        ${
+          comments.length === 0
+            ? `<p style="color:var(--text-muted); text-align:center; padding:20px; font-size:13px;">Belum ada komentar. Jadilah yang pertama! 🎬</p>`
+            : comments
+                .map(
+                  (c) => `
+          <div class="comment-item" data-comment-id="${c.id}">
+            <div class="comment-header">
+              <span class="comment-name">${escapeHtml(c.name)}</span>
+              <span class="comment-date">${formatCommentDate(c.createdAt)}</span>
+            </div>
+            <p class="comment-text">${escapeHtml(c.text)}</p>
+            ${
+              window.TuntonAuth && window.TuntonAuth.getSession()?.isAdmin ? `
+              <button type="button" class="comment-delete-btn" data-movie-id="${movie.id}" data-comment-id="${c.id}" aria-label="Hapus komentar">×</button>
+            ` : ``
+            }
+          </div>
+        `
+                )
+                .join("")
+        }
+      </div>
+    </div>
+  `;
+}
+
+function formatCommentDate(isoDate) {
+  const date = new Date(isoDate);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const dateOnly = date.toDateString();
+  const todayStr = today.toDateString();
+  const yesterdayStr = yesterday.toDateString();
+
+  let dateStr;
+  if (dateOnly === todayStr) {
+    dateStr = "Hari ini";
+  } else if (dateOnly === yesterdayStr) {
+    dateStr = "Kemarin";
+  } else {
+    dateStr = date.toLocaleDateString("id-ID", { year: "numeric", month: "short", day: "numeric" });
+  }
+
+  const timeStr = date.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+  return `${dateStr} ${timeStr}`;
+}
+
+function bindCommentsWidget(movie) {
+  const session = window.TuntonAuth ? window.TuntonAuth.getSession() : null;
+  if (!session) return;
+
+  const textarea = document.getElementById("commentInput");
+  const charCount = document.getElementById("charCount");
+  const submitBtn = document.getElementById("submitCommentBtn");
+  const statusEl = document.getElementById("commentStatus");
+
+  textarea.addEventListener("input", () => {
+    charCount.textContent = textarea.value.length;
+  });
+
+  submitBtn.addEventListener("click", async () => {
+    const text = textarea.value.trim();
+
+    if (!text || text.length === 0) {
+      statusEl.textContent = "Komentar tidak boleh kosong.";
+      statusEl.className = "comment-status error";
+      return;
+    }
+
+    if (text.length > 500) {
+      statusEl.textContent = "Komentar terlalu panjang (max 500 karakter).";
+      statusEl.className = "comment-status error";
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Mengirim...";
+    statusEl.textContent = "";
+
+    try {
+      const res = await fetch("/api/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ movieId: movie.id, name: session.name, text, token: session.token }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || "Gagal mengirim komentar.");
+
+      statusEl.textContent = "Komentar berhasil dikirim! ✓";
+      statusEl.className = "comment-status success";
+      textarea.value = "";
+      charCount.textContent = "0";
+
+      setTimeout(() => {
+        const updated = await Store.getMovieById(movie.id, true);
+        if (updated) renderMovie(updated);
+      }, 500);
+    } catch (err) {
+      statusEl.textContent = `Gagal: ${err.message}`;
+      statusEl.className = "comment-status error";
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Kirim";
+    }
+  });
+
+  document.querySelectorAll(".comment-delete-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      if (!confirm("Yakin hapus komentar ini?")) return;
+
+      const commentId = btn.dataset.commentId;
+      const movieId = btn.dataset.movieId;
+      const secret = sessionStorage.getItem("tuntonluk_admin_secret");
+
+      if (!secret) {
+        alert("Anda tidak punya akses admin untuk menghapus komentar.");
+        return;
+      }
+
+      btn.disabled = true;
+      try {
+        const res = await fetch("/api/comments", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Admin-Secret": secret,
+          },
+          body: JSON.stringify({ movieId, commentId }),
+        });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(body.error || "Gagal menghapus komentar.");
+
+        const updated = await Store.getMovieById(movieId, true);
+        if (updated) renderMovie(updated);
+      } catch (err) {
+        alert(`Gagal menghapus: ${err.message}`);
+        btn.disabled = false;
+      }
+    });
+  });
+}
+
 function renderMovie(movie) {
   const episodes = getEpisodes(movie);
   const firstVideo = episodes[0]?.videoUrl || "";
@@ -148,6 +316,7 @@ function renderMovie(movie) {
         </div>
         <p class="detail-desc">${escapeHtml(movie.description)}</p>
         ${ratingWidgetHtml(movie)}
+        ${commentsWidgetHtml(movie)}
       </div>
     </div>
   `;
@@ -161,6 +330,7 @@ function renderMovie(movie) {
   });
 
   bindRatingWidget(movie);
+  bindCommentsWidget(movie);
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
