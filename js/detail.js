@@ -111,7 +111,8 @@ function bindRatingWidget(movie) {
 }
 
 function commentsWidgetHtml(movie) {
-  const comments = Array.isArray(movie.comments) ? movie.comments : [];
+  const allComments = Array.isArray(movie.comments) ? movie.comments : [];
+  const comments = [...allComments].sort((a, b) => b.ts - a.ts);
   const session = window.TuntonAuth ? window.TuntonAuth.getSession() : null;
 
   return `
@@ -147,7 +148,7 @@ function commentsWidgetHtml(movie) {
             </div>
             <p class="comment-text">${escapeHtml(c.text)}</p>
             ${
-              window.TuntonAuth && window.TuntonAuth.getSession()?.isAdmin ? `
+              sessionStorage.getItem("tuntonluk_admin_secret") ? `
               <button type="button" class="comment-delete-btn" data-movie-id="${movie.id}" data-comment-id="${c.id}" aria-label="Hapus komentar">×</button>
             ` : ``
             }
