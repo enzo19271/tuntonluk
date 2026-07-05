@@ -352,7 +352,11 @@ function openMovieModal(movie = null) {
   document.getElementById("movieId").value = movie ? movie.id : "";
   document.getElementById("movieTitle").value = movie ? movie.title : "";
   document.getElementById("movieAuthor").value = movie ? movie.author : "";
-  document.getElementById("movieRating").value = movie ? movie.rating ?? "" : "";
+  const ratingCount = movie && Array.isArray(movie.ratings) ? movie.ratings.length : 0;
+  document.getElementById("movieRatingDisplay").textContent =
+    movie && movie.rating
+      ? `${movie.rating} / 10 (dari ${ratingCount} rating publik)`
+      : "Belum ada rating dari publik";
   document.getElementById("moviePoster").value = movie ? movie.poster : "";
   document.getElementById("movieDescription").value = movie ? movie.description : "";
   renderEpisodeRows(getEpisodesForEdit(movie));
@@ -400,9 +404,6 @@ async function handleMovieSave(e) {
   const payload = {
     title: document.getElementById("movieTitle").value.trim(),
     author: document.getElementById("movieAuthor").value.trim(),
-    rating: document.getElementById("movieRating").value
-      ? parseFloat(document.getElementById("movieRating").value)
-      : null,
     poster: document.getElementById("moviePoster").value.trim(),
     description: document.getElementById("movieDescription").value.trim(),
     episodes,
