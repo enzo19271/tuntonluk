@@ -43,5 +43,10 @@
     "name": "Dede",
     "pinHash": "308c7b64b5d87c073c7a5acf9209daffbecacba698f06194ed3185368054353f",
     "createdAt": 1783314213002
+  },
+  {
+    "name": "Antares",
+    "pinHash": "69fa225c77a6e1d5b7d18446dda4e079fb540221445b3e850e3fcb71a4f49eab",
+    "createdAt": 1783337495978
   }
 ]
