@@ -40,9 +40,14 @@
           "name": "Dede",
           "stars": 4,
           "ts": 1783314569324
+        },
+        {
+          "name": "Antares",
+          "stars": 3,
+          "ts": 1783338093725
         }
       ],
-      "rating": 8
+      "rating": 7.6
     },
     {
       "title": "ARDI: The Prequel",
