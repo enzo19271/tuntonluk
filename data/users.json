@@ -38,5 +38,10 @@
     "name": "Yui",
     "pinHash": "978af5685792ce181d6da74c4aecc99a5a0a2a4e044b39185d73e5c63a2634b9",
     "createdAt": 1783258995742
+  },
+  {
+    "name": "Dede",
+    "pinHash": "308c7b64b5d87c073c7a5acf9209daffbecacba698f06194ed3185368054353f",
+    "createdAt": 1783314213002
   }
 ]
