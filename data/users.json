@@ -48,5 +48,10 @@
     "name": "Antares",
     "pinHash": "69fa225c77a6e1d5b7d18446dda4e079fb540221445b3e850e3fcb71a4f49eab",
     "createdAt": 1783337495978
+  },
+  {
+    "name": "delutpi",
+    "pinHash": "f2a5ef825a543fc000417964e1a10354b29b5d3d024d2ff36da28184338d1ac1",
+    "createdAt": 1783338936384
   }
 ]
