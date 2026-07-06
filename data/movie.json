@@ -35,9 +35,14 @@
           "name": "Saufa Zahra",
           "stars": 5,
           "ts": 1783226220412
+        },
+        {
+          "name": "Dede",
+          "stars": 3,
+          "ts": 1783314561125
         }
       ],
-      "rating": 8
+      "rating": 7.5
     },
     {
       "title": "ARDI: The Prequel",
