@@ -47,7 +47,16 @@
           "ts": 1783338093725
         }
       ],
-      "rating": 7.6
+      "rating": 7.6,
+      "comments": [
+        {
+          "id": "c_1788432655573_903n43fm0",
+          "name": "Enzo Fahrezi",
+          "text": "test",
+          "ts": 1788432655573,
+          "createdAt": "2026-09-03T10:50:55.573Z"
+        }
+      ]
     },
     {
       "title": "ARDI: The Prequel",
